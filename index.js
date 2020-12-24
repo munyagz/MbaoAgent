@@ -14,7 +14,6 @@ const db = require('./dbconf')
   setInterval(() => {
         
   console.log("Fetching Transactions... " )
-
         
     sql = `SELECT * FROM contributions WHERE status = 0 limit ${process.env.RECORD_LIMIT}`;
     db.mpesa_channel.query(sql, function(err, data, fields) {
@@ -44,11 +43,11 @@ const db = require('./dbconf')
             })
 
 
-        let contributionSql = "INSERT IGNORE INTO contributions (member_id,names,scheme_id,amount,details,contr_msisdn,new_entry,year,month) VALUES ?"
+         sql = "INSERT IGNORE INTO contributions (member_id,names,scheme_id,amount,details,contr_msisdn,new_entry,year,month) VALUES ?"
         values = [
             [item.mpesa_acc,item.mpesa_sender,scheme_id,item.mpesa_amt,item.mpesa_code,item.mpesa_msisdn,new_entry,new Date(item.date_created).getFullYear(),new Date(item.date_created).getMonth()]
         ]
-        db.juakali.query(contributionSql, [values], (err, result)=> {
+        db.juakali.query(sql, [values], (err, result)=> {
             if (err) throw err;
         
             if(result.affectedRows == 1) {
